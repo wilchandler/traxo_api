@@ -45,12 +45,21 @@ describe Traxo::Auth do
 
   describe '#exchange_request_code' do
     let(:call) { auth.exchange_request_code('TEST_CODE', redirect_uri) }
+    let(:data) do
+      {
+        client_id: 'TEST_ID',
+        client_secret: 'TEST_SECRET',
+        grant_type: 'authorization_code',
+        redirect_uri: redirect_uri,
+        code: 'TEST_CODE'
+      }
+    end
     let(:response_fixture) { File.new("#{FIXTURES_DIR}/auth/exchange_request_code.json", 'r') }
-    let(:stub) { stub_request(:post, token_address).to_return(body: response_fixture) }
+    let(:stub) { stub_request(:post, token_address).with(body: data).to_return(body: response_fixture) }
 
     before(:each) { stub }
 
-    it 'makes a POST request to the Traxo token address' do
+    it 'makes a POST request with correct data to the Traxo token address' do
       call
       expect(stub).to have_been_requested
     end
@@ -59,24 +68,33 @@ describe Traxo::Auth do
       response = call
       expect(response).to be_instance_of Hash
     end
+  end
 
-    it 'sends necessary data' do
-      data = {
+
+  describe '#exchange_refresh_token' do
+    let(:call) { auth.exchange_refresh_token('TEST_REFRESH_TOKEN') }
+    let(:data) do
+      {
         client_id: 'TEST_ID',
         client_secret: 'TEST_SECRET',
-        grant_type: 'authorization_code',
-        redirect_uri: redirect_uri,
-        code: 'TEST_CODE'
+        grant_type: 'refresh_token',
+        refresh_token: 'TEST_REFRESH_TOKEN' 
       }
+    end
+    let(:response_fixture) { File.new("#{FIXTURES_DIR}/auth/exchange_refresh_token.json", 'r') }
+    let(:stub) { stub_request(:post, token_address).with(body: data).to_return(body: response_fixture) }
 
-      data_specific_stub = stub_request(:post, token_address)
-                           .with(body: data)
-                           .to_return(body: File.new("#{FIXTURES_DIR}/auth/exchange_request_code.json", 'r'))
-
+    before(:each) { stub }
+    
+    it 'makes a POST request with the correct data to the Traxo token address' do
       call
-      expect(data_specific_stub).to have_been_requested 
+      expect(stub).to have_been_requested
     end
 
+    it 'returns a Hash (parsed from JSON)' do
+      response = call
+      expect(response).to be_instance_of Hash
+    end
   end
 
 end

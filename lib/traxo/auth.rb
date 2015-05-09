@@ -20,6 +20,12 @@ module Traxo
       JSON.parse(response.body)
     end
 
+    def exchange_refresh_token(token)
+      data = token_refresh_data(token)
+      response = Net::HTTP.post_form(token_uri, data)
+      JSON.parse(response.body)
+    end
+
       private
 
     def token_uri
@@ -36,6 +42,14 @@ module Traxo
       }
     end
 
+    def token_refresh_data(token)
+      {
+        client_id: @client_id,
+        client_secret: @client_secret,
+        grant_type: 'refresh_token',
+        refresh_token: token
+      }
+    end
   end
 
 end
