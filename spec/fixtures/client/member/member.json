@@ -1,0 +1,20 @@
+{
+  "id": "1111111",
+  "status": "Active",
+  "first_name": "Don",
+  "last_name": "Draper",
+  "email": "don.draper@example.com",
+  "gender": "M",
+  "home_city": "Fort Worth",
+  "home_city_lat": "32.7254104614258",
+  "home_city_lon": "-97.3208465576172",
+  "state_provence": "TX",
+  "zip": "76101",
+  "country": "US",
+  "time_zone_id": "America/Chicago",
+  "travel_score": "73",
+  "url": "https://www.traxo.com/profile/view?id=6b12a662362b746439bfb02436be7bdd",
+  "profile_image_url": "https://static.traxo.com/profile_94eabc1b0bd99b4eb6c5fa37cee14eef.jpg",
+  "created": "2008-11-08T09:37:07+0000",
+  "updated": "2011-10-26T19:45:51+0000"
+}
