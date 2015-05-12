@@ -33,6 +33,7 @@ module Traxo
     end
 
     def query_string(data = {})
+      data.keep_if { |key, value| value }
       (data.empty?) ? '' : "?#{ URI.encode_www_form(data)}"
     end
   end

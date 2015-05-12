@@ -3,7 +3,6 @@ module Traxo
 
     def initialize(args, attributes)
       attributes.each do |attribute|
-        puts attribute
         i_var = "@#{attribute}".to_sym
         value = args[attribute.to_s]
         self.instance_variable_set(i_var, value)

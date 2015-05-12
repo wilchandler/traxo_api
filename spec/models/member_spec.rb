@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Traxo::Member do
   it { should have_attr_accessor(:id) }
+  it { should have_attr_accessor(:status) }
   it { should have_attr_accessor(:first_name) }
   it { should have_attr_accessor(:last_name) }
   it { should have_attr_accessor(:email) }
