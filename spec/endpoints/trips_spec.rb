@@ -74,7 +74,7 @@ describe 'Traxo::Client member endpoints' do
       .to_return(body: fixture_response)
     end
     
-    it 'makes a GET request to the correct address (including trip id)' do
+    it 'makes a GET request to the correct address (including trip id) with correct headers' do
       stub && call
 
       expect(stub).to have_been_requested
@@ -89,7 +89,7 @@ describe 'Traxo::Client member endpoints' do
       expect(segment_stub).to have_been_requested
     end
 
-    it 'returns a Traxo::Trip object' do
+    it 'returns a Traxo::Trip object if found' do
       stub
       response = call
 
@@ -101,7 +101,26 @@ describe 'Traxo::Client member endpoints' do
   end
 
   describe '#get_current_trip' do
-    pending
+    let(:address) { "#{Traxo::Client::API_URL}trips/current" }
+    let(:call) { client.get_current_trip }
+    let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trip.json") }
+    let(:stub) { stub_request(:get, address).with(headers: headers).to_return(body: fixture_response)}
+
+    it 'makes a GET request to the correct address with correct headers' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns a Traxo::Trip object if found' do
+      stub
+      response = call
+
+      expect(response).to be_instance_of(Traxo::Trip)
+    end
+
+    xit 'raises an exception if not found' do
+    end
   end
 
   describe '#get_upcoming_trips' do

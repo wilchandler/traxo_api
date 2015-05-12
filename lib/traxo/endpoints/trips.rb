@@ -15,6 +15,13 @@ module Traxo
       Trip.new(response)
     end
 
+    def get_current_trip(options = {})
+      data = get_trip_options(options)
+      url = "#{ API_URL }trips/current#{ query_string(data) }"
+      response = get_request_with_token(url)
+      Trip.new(response)
+    end
+
       private
 
     def get_trips_options(args)
