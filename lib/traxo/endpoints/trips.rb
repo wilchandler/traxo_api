@@ -22,6 +22,12 @@ module Traxo
       Trip.new(response)
     end
 
+    def get_trip_oembed(trip_id)
+      url = "#{ API_URL }trips/oembed/#{trip_id}"
+      response = get_request_with_token(url)
+      TripOEmbed.new(response)
+    end
+
       private
 
     def get_trips_options(args)

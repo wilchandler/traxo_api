@@ -1,0 +1,11 @@
+{
+ "type": "link",
+ "version": "1.0",
+ "title": "Daytripping",
+ "provider_name": "Traxo",
+ "provider_url": "https://www.traxo.com",
+ "cache_age": 600,
+ "url": "https://www.traxo.com/widget/trip?id=5ea89349e4ee202a5584dff57e188cd2b10a80327069fbbc4ea0cb564099cc48",
+ "scope": "user",
+ "expires": 600
+}

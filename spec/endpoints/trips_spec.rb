@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Traxo::Client member endpoints' do
+describe 'Traxo::Client trips endpoints' do
   let(:client) { Traxo::Client.new('', '', 'TEST_TOKEN') }
   let(:headers) { {'Authorization' => 'Bearer TEST_TOKEN'} }
 
@@ -104,7 +104,7 @@ describe 'Traxo::Client member endpoints' do
     let(:address) { "#{Traxo::Client::API_URL}trips/current" }
     let(:call) { client.get_current_trip }
     let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trip.json") }
-    let(:stub) { stub_request(:get, address).with(headers: headers).to_return(body: fixture_response)}
+    let(:stub) { stub_request(:get, address).with(headers: headers).to_return(body: fixture_response) }
 
     it 'makes a GET request to the correct address with correct headers' do
       stub && call
@@ -132,7 +132,26 @@ describe 'Traxo::Client member endpoints' do
   end
 
   describe '#get_trip_oembed' do
-    pending
+    let(:address) { "#{Traxo::Client::API_URL}trips/oembed/123456" }
+    let(:call) { client.get_trip_oembed(123456) }
+    let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trip_oembed.json") }
+    let(:stub) { stub_request(:get, address).with(headers: headers).to_return(body: fixture_response) }
+
+    it 'makes a GET request to the correct address with correct headers' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns a Traxo::TripOEmbed object if found' do
+      stub
+      response = call
+
+      expect(response).to be_instance_of Traxo::TripOEmbed
+    end
+
+    xit 'raises an exception if not found' do
+    end
   end
 
 end
