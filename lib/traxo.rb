@@ -7,4 +7,5 @@ require 'traxo/client'
 
 require 'traxo/endpoints/member'
 
+require 'traxo/models/base'
 require 'traxo/models/member'
