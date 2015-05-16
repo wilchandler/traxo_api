@@ -22,6 +22,13 @@ module Traxo
       Trip.new(response)
     end
 
+    def get_past_trips(options = {})
+      data = get_past_trips_options(options)
+      url = "#{ API_URL }trips/past#{ query_string(data) }"
+      response = get_request_with_token(url)
+      response.map { |trip| Trip.new(trip) }
+    end
+
     def get_trip_oembed(trip_id)
       url = "#{ API_URL }trips/oembed/#{trip_id}"
       response = get_request_with_token(url)
@@ -50,6 +57,13 @@ module Traxo
 
     def get_trip_options(args)
       ([1, true].include? args[:segments]) ? { segments: 1 } : {}
+    end
+
+    def get_past_trips_options(args)
+      args[:segments] = 1 if [true, 1, '1'].include? args[:segments]
+      options = [:segments, :privacy, :purpose, :limit, :offset]
+      args.select! { |a| options.include? a }
+      args
     end
 
   end

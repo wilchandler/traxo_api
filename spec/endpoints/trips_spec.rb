@@ -128,7 +128,35 @@ describe 'Traxo::Client trips endpoints' do
   end
 
   describe '#get_past_trips' do
-    pending
+    let(:address) { "#{Traxo::Client::API_URL}trips/past" }
+    let(:call) { client.get_past_trips }
+    let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trips.json") }
+    let(:stub) { stub_request(:get, address).with(headers: headers).to_return(body: fixture_response) }
+
+    it 'makes a GET request to the correct address with correct headers' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns an array of Traxo::Trip objects' do
+      stub
+      results = call
+      types = results.map(&:class).uniq
+
+      expect(results).to be_instance_of Array
+      expect(types).to match_array [Traxo::Trip]
+    end
+
+    it 'accepts some options: segments, privacy, purpose, offset, limit' do
+      args = { segments: 1, privacy: 'Buddies Only', purpose: 'Personal', offset: 5, limit: 10 }
+      options_stub = stub_request(:get, address).with(headers: headers, query: args)
+                                        .to_return(body: fixture_response)
+      client.get_past_trips(args)
+
+      expect(options_stub).to have_been_requested      
+    end
+
   end
 
   describe '#get_trip_oembed' do
