@@ -22,8 +22,15 @@ module Traxo
       Trip.new(response)
     end
 
+    def get_upcoming_trips(options = {})
+      data = get_past_or_upcoming_trips_options(options)
+      url = "#{ API_URL }trips/upcoming#{ query_string(data) }"
+      response = get_request_with_token(url)
+      response.map { |trip| Trip.new(trip) }
+    end
+
     def get_past_trips(options = {})
-      data = get_past_trips_options(options)
+      data = get_past_or_upcoming_trips_options(options)
       url = "#{ API_URL }trips/past#{ query_string(data) }"
       response = get_request_with_token(url)
       response.map { |trip| Trip.new(trip) }
@@ -59,7 +66,7 @@ module Traxo
       ([1, true].include? args[:segments]) ? { segments: 1 } : {}
     end
 
-    def get_past_trips_options(args)
+    def get_past_or_upcoming_trips_options(args)
       args[:segments] = 1 if [true, 1, '1'].include? args[:segments]
       options = [:segments, :privacy, :purpose, :limit, :offset]
       args.select! { |a| options.include? a }
