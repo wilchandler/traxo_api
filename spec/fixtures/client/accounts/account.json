@@ -1,0 +1,23 @@
+{
+  "id": "12345",
+  "member_id": "1111111",
+  "status": "Active",
+  "name": "Marriott Hotels",
+  "program_name": "Marriott Rewards",
+  "classification": "Hotel",
+  "home_page_url": "http://www.marriott.com",
+  "password_url": "https://www.marriott.com/forgotPassword.mi",
+  "membership_url": "https://www.marriott.com/rewards/createAccount/createAccountPage1.mi",
+  "contact_url": "https://www.marriott.com/suggest/suggest.mi",
+  "phone": "1-888-236-2427",
+  "account_id": "1234567890",
+  "last_access": "2012-10-31T19:32:21+0000",
+  "last_harvest_status": "No Travel Data",
+  "image_url": "https://www.traxo.com/images/travelsites/Marriott.gif",
+  "icon_image_url": "https://www.traxo.com/images/travelsites/24x24/Marriott.gif",
+  "loyalty_status": "Silver",
+  "loyalty_level": "1",
+  "loyalty_points": "42250",
+  "loyalty_image_url": "https://api.traxo.com/images/trophy/loyalty/level1_active.png",
+  "auto_login": "Available"
+}
