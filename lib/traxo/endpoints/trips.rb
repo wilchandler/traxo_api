@@ -42,6 +42,13 @@ module Traxo
       TripOEmbed.new(response)
     end
 
+    def create_trip(arg)
+      data = create_trip_data(arg)
+      url = "#{ API_URL}trips"
+      response = post_request_with_token(url, data)
+      Trip.new(response) if response
+    end
+
       private
 
     def get_trips_options(args)
@@ -71,6 +78,42 @@ module Traxo
       options = [:segments, :privacy, :purpose, :limit, :offset]
       args.select! { |a| options.include? a }
       args
+    end
+
+    def create_trip_data(arg)
+      if arg.is_a? Hash
+        create_trip_data_from_hash(arg)
+      elsif arg.is_a? Trip
+        create_trip_data_from_trip(arg)
+      else
+        raise ArgumentError.new('Argument must be a Traxo::Trip object or Hash')
+      end
+    end
+
+    def create_trip_data_from_hash(arg)
+      create_trip_check_required_params(arg)
+      options = [:destination, :begin_datetime, :end_datetime, :personal,
+                 :business, :privacy, :headline, :first_name, :last_name]
+      arg.select! { |a| options.include? a }
+
+      negative = [false, -1, 0, 'no', 'No', 'n', 'N']
+      (arg[:business] = negative.include?(arg[:business]) ? 'N' : 'Y') if arg[:business]
+      (arg[:business] = negative.include?(arg[:business]) ? 'N' : 'Y') if arg[:personal]
+      arg[:begin_datetime] = convert_time(arg[:begin_datetime]) if arg[:begin_datetime]
+      arg[:end_datetime] = convert_time(arg[:end_datetime]) if arg[:end_datetime]
+      arg
+    end
+
+    def create_trip_check_required_params(arg)
+      if arg.is_a? Hash
+        valid = arg[:destination] && arg[:end_datetime] && arg[:begin_datetime]
+      elsif arg.is_a? Trip
+        #
+      end
+      unless valid
+        message = 'Argument must include destination, end_datetime, and begin_datetime'
+        raise ArgumentError.new(message)
+      end
     end
 
   end

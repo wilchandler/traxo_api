@@ -209,4 +209,74 @@ describe 'Traxo::Client trips endpoints' do
     end
   end
 
+  describe '#create_trip' do
+    it 'raises an error if its argument is not a Hash or Traxo::Trip' do
+      expect{ client.create_trip([]) }.to raise_error(ArgumentError)
+    end
+
+    context 'given a Hash of parameters' do
+
+      it 'raises an exception if the required arguments are not provided' do
+        args = { personal: true }
+
+        expect{ client.create_trip(args) }.to raise_error(ArgumentError)
+      end
+
+      context 'given the required parameters' do
+        let(:one_week) { Time.now + (60 * 60 * 24 * 7) }
+        let(:two_weeks) { Time.now + (60 * 60 * 24 * 7) }
+        let(:args) do
+          {
+            begin_datetime: one_week,
+            end_datetime: two_weeks,
+            destination: "Little Rock, AR"
+          }
+        end
+        let(:args_with_string_dates) { args.merge({ begin_datetime: one_week.iso8601, end_datetime: two_weeks.iso8601 }) }
+        let(:call) { client.create_trip(args) }
+        let(:address) { 'https://api.traxo.com/v2/trips' }
+        let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trip.json") }
+        let(:stub) do
+          stub_request(:post, address).with(body: args_with_string_dates, headers: headers)
+                                      .to_return(body: fixture_response, status: 201)
+        end
+
+        it 'returns a Traxo::Trip object if creation is successful' do
+          stub
+          result = call
+
+          expect(result).to be_instance_of Traxo::Trip
+        end
+
+        it 'returns nil if creation is unsuccessful' do
+          stub_request(:post, address).with(body: args_with_string_dates, headers: headers)
+                                      .to_return(status: 400)
+          result = call
+
+          expect(result).to be nil
+        end
+
+        it 'makes a POST request to the correct addres with correct headers' do
+          stub && call
+
+          expect(stub).to have_been_requested
+        end
+      end
+    end
+
+    context 'given a Traxo::Trip object as an argument' do
+
+      xit 'updates and returns the provided object if creation is successful' do
+      end
+
+      xit 'returns false if creation is unsuccessful' do
+      end
+
+      xit 'stores errors in the provided object if creation is unsuccessful' do
+      end
+
+    end
+
+  end
+
 end

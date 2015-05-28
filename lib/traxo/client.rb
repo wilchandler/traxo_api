@@ -22,9 +22,9 @@ module Traxo
     def get_request_with_token(url)
       uri = URI.parse(url)
       request = Net::HTTP::Get.new(uri)
-      request['Authorization'] = "Bearer #{@access_token}"
+      attach_token(request)
       response = make_http_request(uri) { |http| http.request(request) }
-      JSON.parse(response.body)
+      response.code.to_i < 300 ? JSON.parse(response.body) : nil
     end
 
     def get_request_with_token_and_client(url)
@@ -32,9 +32,39 @@ module Traxo
       # Some endpoints require client id and secret (most do not)
     end
 
+    def post_request_with_token(url, data)
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new(uri)
+      attach_token(request)
+      attach_data(request, data)
+      response = make_http_request(uri) { |http| http.request(request) }
+      response.code.to_i < 300 ? JSON.parse(response.body) : nil
+    end
+
     def query_string(data = {})
       data.keep_if { |key, value| value }
       (data.empty?) ? '' : "?#{ URI.encode_www_form(data)}"
+    end
+
+    def attach_token(request)
+      request['Authorization'] = "Bearer #{@access_token}"
+    end
+
+    def attach_data(request, data)
+      request.set_form_data(data)
+    end
+
+    def convert_time(time)
+      if time.is_a? String
+        begin
+          time = Time.parse(time)
+        rescue
+          return nil
+        end
+      elsif !(time.is_a?(Date) || time.is_a?(Time))
+        return nil
+      end
+      time.iso8601
     end
   end
   
