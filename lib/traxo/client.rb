@@ -41,6 +41,15 @@ module Traxo
       response.code.to_i < 300 ? JSON.parse(response.body) : nil
     end
 
+    def put_request_with_token(url, data)
+      uri = URI.parse(url)
+      request = Net::HTTP::Put.new(uri)
+      attach_token(request)
+      attach_data(request, data)
+      response = make_http_request(uri) { |http| http.request(request) }
+      response.code.to_i < 300 ? JSON.parse(response.body) : false
+    end
+
     def delete_request_with_token(url)
       uri = URI.parse(url)
       request = Net::HTTP::Delete.new(uri)

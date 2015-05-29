@@ -279,6 +279,39 @@ describe 'Traxo::Client trips endpoints' do
 
   end
 
+  describe '#update_trip' do
+    let(:id) { 123456 }
+    let(:address) { "https://api.traxo.com/v2/trips/#{id}" }
+    let(:args) {{ destination: 'Little Rock, AR', headline: 'Finally gonna tell her how I feel!' }}
+    let(:call) { client.update_trip(id, args) }
+    let(:fixture_response) { File.new("#{FIXTURES_DIR}/client/trips/trip.json") }
+    let(:stub) do
+      stub_request(:put, address).with(headers: headers, body: args)
+                                 .to_return(status: 200, body: fixture_response)
+    end
+
+    it 'makes a PUT request to the correct address with correct headers and data' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns a Traxo::Trip object if the update is successful' do
+      stub
+      result = call
+
+      expect(result).to be_instance_of Traxo::Trip
+    end
+
+    it 'returns false if the update is unsuccessful' do
+      stub_request(:put, address).with(headers: headers, body: args)
+                                 .to_return(status: 403)
+      result = call
+
+      expect(result).to be false
+    end
+  end
+
   describe '#delete_trip' do
     let(:id) { 123456 }
     let(:address) { "https://api.traxo.com/v2/trips/#{id}" }

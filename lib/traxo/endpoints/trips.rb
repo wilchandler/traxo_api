@@ -44,14 +44,25 @@ module Traxo
 
     def create_trip(arg)
       data = create_trip_data(arg)
+      create_trip_check_required_params(data)
       url = "#{ API_URL}trips"
       response = post_request_with_token(url, data)
       Trip.new(response) if response
     end
 
-    def delete_trip(id)
-      raise ArgumentError.new('Must provide an integer trip ID') unless (id && id.is_a?(Fixnum))
-      url = "#{ API_URL }trips/#{ id }"
+    def update_trip(trip_id, args)
+      raise ArgumentError.new('Must provide an integer trip ID') unless trip_id.is_a?(Fixnum)
+      raise ArgumentError.new('Must provide a Hash of attributes') unless args.is_a? Hash
+      return false if args.empty?
+      data = create_trip_data_from_hash(args)
+      url = "#{ API_URL }trips/#{ trip_id }"
+      response = put_request_with_token(url, data)
+      response ? Trip.new : response
+    end
+
+    def delete_trip(trip_id)
+      raise ArgumentError.new('Must provide an integer trip ID') unless trip_id.is_a?(Fixnum)
+      url = "#{ API_URL }trips/#{ trip_id }"
       delete_request_with_token(url)
     end
 
@@ -97,7 +108,6 @@ module Traxo
     end
 
     def create_trip_data_from_hash(arg)
-      create_trip_check_required_params(arg)
       options = [:destination, :begin_datetime, :end_datetime, :personal,
                  :business, :privacy, :headline, :first_name, :last_name]
       arg.select! { |a| options.include? a }
