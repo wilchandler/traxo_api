@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Traxo::Client trips endpoints' do
-  let(:client) { Traxo::Client.new('', '', 'TEST_TOKEN') }
+  let(:client) { Traxo::Client.new('TEST_TOKEN', '', '') }
   let(:headers) { {'Authorization' => 'Bearer TEST_TOKEN'} }
 
   describe '#get_trips' do

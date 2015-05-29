@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Traxo::Client member endpoints' do
-  let(:client) { Traxo::Client.new('TEST_ID', 'TEST_SECRET', 'TEST_TOKEN') }
+  let(:client) { Traxo::Client.new('TEST_TOKEN', 'TEST_ID', 'TEST_SECRET') }
   let(:headers) { { 'Authorization' => 'Bearer TEST_TOKEN' } }
 
   describe '#get_member' do
