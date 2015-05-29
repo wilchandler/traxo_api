@@ -49,6 +49,12 @@ module Traxo
       Trip.new(response) if response
     end
 
+    def delete_trip(id)
+      raise ArgumentError.new('Must provide an integer trip ID') unless (id && id.is_a?(Fixnum))
+      url = "#{ API_URL }trips/#{ id }"
+      delete_request_with_token(url)
+    end
+
       private
 
     def get_trips_options(args)

@@ -279,4 +279,40 @@ describe 'Traxo::Client trips endpoints' do
 
   end
 
+  describe '#delete_trip' do
+    let(:id) { 123456 }
+    let(:address) { "https://api.traxo.com/v2/trips/#{id}" }
+    let(:call) { client.delete_trip(id) }
+    let(:stub) do
+      stub_request(:delete, address).with(headers: headers)
+                                    .to_return(status: 200)
+    end
+
+    it 'raises an exception if an ID integer is not provided' do
+      expect{ client.delete_trip('foo') }.to raise_error(ArgumentError)
+    end
+
+    it 'makes a DELETE request to the correct address with correct headers' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns true if the deletion is successful' do
+      stub
+      result = call
+
+      expect(result).to be true
+    end
+
+    it 'returns false if the deletion is unsuccessful' do
+      stub_request(:delete, address).with(headers: headers)
+                                    .to_return(status: 404)
+      result = call
+
+      expect(result).to be false
+    end
+
+  end
+
 end
