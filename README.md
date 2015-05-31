@@ -1,6 +1,17 @@
-# TraxoApi
+# traxo_api
 
 The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
+
+Contents:  
+- [Installation](## Installation)  
+- [Usage](## Usage)  
+  - [Authorization](### Authorization)  
+    - [Authorization methods](#### Authorization methods)  
+    - [Example of controller flow](#### Example of authorization controller flow)  
+  - [CRUD](### Crud)  
+    - [Client Initialization](#### Client Initialization)  
+    - [Trip Endpoints](### Trip Endpoints)  
+- [Contributing](## Contributing)
 
 ## Installation
 
@@ -76,7 +87,7 @@ end
 ### CRUD
 Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
 
-#### Initialization (with example use)
+#### Client Initialization
 
 ##### ::new(access_token, client_id, client_secret) => Traxo::Client
 Returns a Traxo::Client object which provides the methods for interacting with the API.
@@ -111,6 +122,77 @@ _:status_, _:classification_, _:offset_, _:limit_
 
 #### Trip Endpoints
 
+##### \#get_trips(args={})
+Retrieves a collection of the user's trips matching the given parameters.  
+
+Optional argument keys:  
+- _:segments_  
+- _:start_  
+- _:end_  
+- _:since_  
+- _:until_  
+- _:status_  
+- _:privacy_  
+- _:purpose_  
+- _:count_  
+- _:offset_  
+- _:limit_  
+- _:recursive_  
+
+##### \#get_trip(id, args={})
+Retrieves the user's trip with the given id.  
+
+Optional argument keys:  
+_:segments_ (boolean, include travel segments or not)
+
+##### \#get_current_trip(args={})
+Retrieves the trip that the user is currently taking.
+ 
+_Optional argument keys same as \#get_trip_
+
+##### \#get_upcoming_trips(args={})
+Retrieves upcoming trips.
+
+Optional argument keys:  
+- _:segments_  
+- _:privacy_  
+- _:purpose_  
+- _:limit_  
+- _:offset_
+
+
+##### \#get_past_trips(args={})
+Retrieves past trips.
+
+_Optional argument keys same as \#get_current_trip_
+
+##### \#get_trip_oembed(id)
+Retrieves the user's trip with the given id in the oEmbed format.
+
+##### \#create_trip(args)
+Creates a trip for the user from the given "args" Hash.
+
+Required argument keys:  
+- _:destination_ (String, i.e. 'Little Rock, AR, US')  
+- _:start_datetime_    
+- _:end_datetime_  
+
+Optional argument keys:  
+- _:personal_  
+- _:business_  
+- _:privacy_  
+- _:headline_  
+- _:first_name_  
+- _:last_name_  
+
+
+##### \#update_trip(id, args)
+Updates the user's trip that has the given id to have the properties from the given "args" Hash.
+
+_Optional argument keys include all of the required and optional keys of \#create_trip._
+
+##### \#delete_trip(id)
+Deletes the user's trip with the given ID.
 
 
 #### Segment (air, car, rail, hotel, activity) Endpoints
@@ -129,11 +211,6 @@ _Not yet implemented_
 _Not yet implemented_
 
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
