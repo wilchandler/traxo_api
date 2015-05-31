@@ -1,6 +1,6 @@
 # TraxoApi
 
-TODO: Delete this and the text above, and describe your gem
+The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
 
 ## Installation
 
@@ -63,7 +63,7 @@ class TraxoController < ApplicationController
 	    response = t.exchange_request_code(code)
 	    
 	    access_token = response['access_token'] # used to authorize requests
-	    lifetime = response['expires_in'] # number of seconds until access_token expires (currently 24 hours)
+	    lifetime = response['expires_in'] # seconds until access_token expires
 	    refresh_token = response['refresh_token'] # used to request new tokens
 	end
 	
@@ -74,6 +74,60 @@ end
 
 
 ### CRUD
+Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
+
+#### Initialization (with example use)
+
+##### ::new(access_token, client_id, client_secret) => Traxo::Client
+Returns a Traxo::Client object which provides the methods for interacting with the API.
+
+```
+t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
+t.get_member # => Traxo::Member object
+```
+
+#### Member Endpoints
+##### \#get_member => Traxo::Member
+Returns a Traxo::Member object with the authorizing user's Traxo information.
+
+##### \#get_stream(args = {}) => Array (from parsed JSON)
+Returns the 'travel stream' for the authorizing user's Traxo account.  
+
+Optional argument keys:  
+_:offset_, _:limit_
+
+
+#### Account Endpoints
+
+##### \#get_account(id) => Traxo::Account
+Returns a travel account with the provided ID as a Traxo::Acount object
+
+##### \#get_acounts(args = {}) => Array (of Traxo::Account objects)
+Returns an array of travel accounts (as Traxo::Account objects)
+
+Optional argument keys:  
+_:status_, _:classification_, _:offset_, _:limit_
+
+
+#### Trip Endpoints
+
+
+
+#### Segment (air, car, rail, hotel, activity) Endpoints
+_Not yet implemented_
+
+#### Source Endpoints
+_Not yet implemented_
+
+#### Provider Endpoints
+_Not yet implemented_
+
+#### Location endpoints
+_Not yet implemented_
+
+#### Callback endpoints
+_Not yet implemented_
+
 
 ## Development
 

@@ -5,7 +5,7 @@ module Traxo
 
     API_URL = "https://api.traxo.com/v2/"
 
-    def initialize(access_token, client_id = nil, client_secret = nil)
+    def initialize(access_token, client_id, client_secret)
       @access_token = access_token
       @client_secret = client_secret
       @client_id = client_id
