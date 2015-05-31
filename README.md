@@ -1,19 +1,19 @@
-# traxo_api
+#traxo_api
 
 The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
 
-Contents:  
-- [Installation](## Installation)  
-- [Usage](## Usage)  
-  - [Authorization](### Authorization)  
-    - [Authorization methods](#### Authorization methods)  
-    - [Example of controller flow](#### Example of authorization controller flow)  
-  - [CRUD](### Crud)  
-    - [Client Initialization](#### Client Initialization)  
-    - [Trip Endpoints](### Trip Endpoints)  
-- [Contributing](## Contributing)
+###README Contents:  
+- [Installation](##installation)  
+- [Usage](##usage)  
+  - [Authorization](###authorization)  
+    - [Authorization methods](####authorization-methods)  
+    - [Example of ontroller flow](####example-of-authorization-controller-flow)  
+  - [CRUD](###crud)  
+    - [Client initialization](####client-initialization)  
+    - [Trip endpoints](###trip-endpoints)  
+- [Contributing](##contributing)
 
-## Installation
+##Installation
 
 Add this line to your application's Gemfile:
 
@@ -29,14 +29,14 @@ Or install it yourself as:
 
     $ gem install traxo_api
 
-## Usage
+##Usage
 
-### Authorization
+###Authorization
 Traxo's API uses the OAuth 2.0 standard for authorization. Additionally, Traxo enforces two later security additions: a _redirect URL_ and a _state parameter_.
 
 To gain authorization from a Traxo user, you will need to [register your application](https://developer.traxo.com/signup) with Traxo.  Once registered, you will need to retrieve your your _client ID_ and _client secret_ from the API's website where you will also need to register a _redirect url_ for the application.
 
-#### Authorization methods
+####Authorization methods
 
 ##### ::new(client_id, client_secret, redirect_url) => Traxo::Auth
 Initializes and returns a Traxo::Auth object. The three parameters are required to complete the the authorization process.
@@ -58,7 +58,7 @@ Using a refresh token, requests new tokens from the Traxo API and returns the AP
 
 
 
-#### Example of authorization controller flow
+####Example of authorization controller flow
 ```
 class TraxoController < ApplicationController
 
@@ -84,10 +84,10 @@ end
 ```
 
 
-### CRUD
+###CRUD
 Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
 
-#### Client Initialization
+####Client Initialization
 
 ##### ::new(access_token, client_id, client_secret) => Traxo::Client
 Returns a Traxo::Client object which provides the methods for interacting with the API.
@@ -97,7 +97,7 @@ t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
 t.get_member # => Traxo::Member object
 ```
 
-#### Member Endpoints
+####Member Endpoints
 ##### \#get_member => Traxo::Member
 Returns a Traxo::Member object with the authorizing user's Traxo information.
 
@@ -108,7 +108,7 @@ Optional argument keys:
 _:offset_, _:limit_
 
 
-#### Account Endpoints
+####Account Endpoints
 
 ##### \#get_account(id) => Traxo::Account
 Returns a travel account with the provided ID as a Traxo::Acount object
@@ -120,7 +120,7 @@ Optional argument keys:
 _:status_, _:classification_, _:offset_, _:limit_
 
 
-#### Trip Endpoints
+####Trip Endpoints
 
 ##### \#get_trips(args={})
 Retrieves a collection of the user's trips matching the given parameters.  
@@ -195,24 +195,24 @@ _Optional argument keys include all of the required and optional keys of \#creat
 Deletes the user's trip with the given ID.
 
 
-#### Segment (air, car, rail, hotel, activity) Endpoints
+####Segment (air, car, rail, hotel, activity) Endpoints
 _Not yet implemented_
 
-#### Source Endpoints
+####Source Endpoints
 _Not yet implemented_
 
-#### Provider Endpoints
+####Provider Endpoints
 _Not yet implemented_
 
-#### Location endpoints
+####Location endpoints
 _Not yet implemented_
 
-#### Callback endpoints
+####Callback endpoints
 _Not yet implemented_
 
 
 
-## Contributing
+##Contributing
 
 1. Fork it ( https://github.com/wilchandler/traxo_api/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
