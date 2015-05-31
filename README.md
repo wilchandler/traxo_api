@@ -3,16 +3,19 @@
 The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
 
 ###README Contents:  
-- [Installation](##installation)  
-- [Usage](##usage)  
-  - [Authorization](###authorization)  
-    - [Authorization methods](####authorization-methods)  
-    - [Example of ontroller flow](####example-of-authorization-controller-flow)  
-  - [CRUD](###crud)  
-    - [Client initialization](####client-initialization)  
-    - [Trip endpoints](###trip-endpoints)  
-- [Contributing](##contributing)
+- [Installation](#toc-installation)  
+- [Usage](#toc-usage)  
+  - [Authorization](#toc-auth)  
+    - [Authorization methods](#toc-auth-methods)  
+    - [Example of ontroller flow](#toc-auth-example)  
+  - [CRUD](#toc-crud)  
+    - [Client initialization](#toc-crud-init)  
+    - [Member endpoints](#toc-crud-member)  
+    - [Account endpoints](#toc-crud-account)  
+    - [Trip endpoints](#toc-crud-trip)  
+- [Contributing](#toc-contributing)
 
+<a name="toc-installation"></a>
 ##Installation
 
 Add this line to your application's Gemfile:
@@ -29,13 +32,16 @@ Or install it yourself as:
 
     $ gem install traxo_api
 
+<a name="toc-usage"></a>
 ##Usage
 
+<a name="toc-auth"></a>
 ###Authorization
 Traxo's API uses the OAuth 2.0 standard for authorization. Additionally, Traxo enforces two later security additions: a _redirect URL_ and a _state parameter_.
 
 To gain authorization from a Traxo user, you will need to [register your application](https://developer.traxo.com/signup) with Traxo.  Once registered, you will need to retrieve your your _client ID_ and _client secret_ from the API's website where you will also need to register a _redirect url_ for the application.
 
+<a name="toc-auth-methods"></a>
 ####Authorization methods
 
 ##### ::new(client_id, client_secret, redirect_url) => Traxo::Auth
@@ -57,7 +63,7 @@ __Note__: As of 5/15, user authorization lasts up to one year, but each access_t
 Using a refresh token, requests new tokens from the Traxo API and returns the API's response as a Hash.  Response keys include 'access_token', 'expires_in', and 'refresh_token.'
 
 
-
+<a name="toc-auth-example"></a>
 ####Example of authorization controller flow
 ```
 class TraxoController < ApplicationController
@@ -83,10 +89,11 @@ end
 
 ```
 
-
+<a name="toc-crud"></a>
 ###CRUD
 Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
 
+<a name="toc-crud-init"></a>
 ####Client Initialization
 
 ##### ::new(access_token, client_id, client_secret) => Traxo::Client
@@ -97,6 +104,7 @@ t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
 t.get_member # => Traxo::Member object
 ```
 
+<a name="toc-crud-member"></a>
 ####Member Endpoints
 ##### \#get_member => Traxo::Member
 Returns a Traxo::Member object with the authorizing user's Traxo information.
@@ -107,7 +115,7 @@ Returns the 'travel stream' for the authorizing user's Traxo account.
 Optional argument keys:  
 _:offset_, _:limit_
 
-
+<a name="toc-crud-account"></a>
 ####Account Endpoints
 
 ##### \#get_account(id) => Traxo::Account
@@ -119,7 +127,7 @@ Returns an array of travel accounts (as Traxo::Account objects)
 Optional argument keys:  
 _:status_, _:classification_, _:offset_, _:limit_
 
-
+<a name="toc-crud-trip"></a>
 ####Trip Endpoints
 
 ##### \#get_trips(args={})
@@ -211,7 +219,7 @@ _Not yet implemented_
 _Not yet implemented_
 
 
-
+<a name="toc-contributing"></a>
 ##Contributing
 
 1. Fork it ( https://github.com/wilchandler/traxo_api/fork )
