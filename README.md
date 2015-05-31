@@ -13,6 +13,7 @@ The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing
     - [Member endpoints](#toc-crud-member)  
     - [Account endpoints](#toc-crud-account)  
     - [Trip endpoints](#toc-crud-trip)  
+- [License](#toc-license)
 - [Contributing](#toc-contributing)
 
 <a name="toc-installation"></a>
@@ -218,6 +219,9 @@ _Not yet implemented_
 ####Callback endpoints
 _Not yet implemented_
 
+<a name="toc-license"></a>
+##License
+[View MIT License](LICENSE.txt)
 
 <a name="toc-contributing"></a>
 ##Contributing
