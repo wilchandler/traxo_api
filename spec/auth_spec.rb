@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Traxo::Auth do
-  let(:auth) { Traxo::Auth.new('TEST_ID', 'TEST_SECRET') }
   let(:oauth_address) { "https://www.traxo.com/oauth/" }
+  let(:auth) { Traxo::Auth.new('TEST_ID', 'TEST_SECRET', redirect_uri) }
   let(:token_address) { "#{oauth_address}token/"}
   let(:redirect_uri) { "wilchandler.me" }
 
@@ -15,7 +15,7 @@ describe Traxo::Auth do
   end
 
   describe '#request_code_url' do
-    let(:url) { auth.request_code_url(redirect_uri) }
+    let(:url) { auth.request_code_url('a_test_state') }
 
     it 'returns a url string' do
       expect(url).to match oauth_address
@@ -29,22 +29,23 @@ describe Traxo::Auth do
       expect(url).to match(/response_type=code/)
     end
 
-    it 'contains the direct_uri' do
+    it 'contains the redirect_uri' do
       expect(url).to match(/redirect_uri=#{redirect_uri}/)
     end
 
-    it 'contains the default state if not specified' do
-      expect(url).to match(/state=live/)
+    it 'contains the specified state' do
+      expect(url).to match(/state=a_test_state/)
     end
 
-    it 'contains the specified state if provided' do
-      specified = auth.request_code_url(redirect_uri, 'a_test_state')
-      expect(specified).to match(/state=a_test_state/)
+    it 'raises an ArgumentError if a (non-empty) String is provided for the state' do
+      expect{ auth.request_code_url }.to raise_error(ArgumentError)
+      expect{ auth.request_code_url('') }.to raise_error(ArgumentError)
+      expect{ auth.request_code_url(1) }.to raise_error(ArgumentError)
     end
   end
 
   describe '#exchange_request_code' do
-    let(:call) { auth.exchange_request_code('TEST_CODE', redirect_uri) }
+    let(:call) { auth.exchange_request_code('TEST_CODE') }
     let(:data) do
       {
         client_id: 'TEST_ID',

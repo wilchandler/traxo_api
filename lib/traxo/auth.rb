@@ -5,17 +5,19 @@ module Traxo
     OAUTH_URL = "https://www.traxo.com/oauth/"
     TOKEN_URL = "#{OAUTH_URL}token/"
 
-    def initialize(client_id, client_secret)
+    def initialize(client_id, client_secret, oauth_redirect_url)
       @client_id = client_id
       @client_secret = client_secret
+      @oauth_redirect_url = oauth_redirect_url
     end
 
-    def request_code_url(oauth_redirect_url, state='live')
-      "#{OAUTH_URL}authenticate?client_id=#{@client_id}&response_type=code&redirect_uri=#{oauth_redirect_url}&state=#{state}"
+    def request_code_url(state)
+      check_state_parameter(state)
+      "#{OAUTH_URL}authenticate?client_id=#{@client_id}&response_type=code&redirect_uri=#{@oauth_redirect_url}&state=#{state}"
     end
 
-    def exchange_request_code(code, oauth_redirect_url)
-      data = token_request_data(code, oauth_redirect_url)
+    def exchange_request_code(code)
+      data = token_request_data(code, @oauth_redirect_url)
       response = Net::HTTP.post_form(token_uri, data)
       JSON.parse(response.body)
     end
@@ -37,7 +39,7 @@ module Traxo
         client_id: @client_id,
         client_secret: @client_secret,
         grant_type: 'authorization_code',
-        redirect_uri: oauth_redirect_url,
+        redirect_uri: @oauth_redirect_url,
         code: code
       }
     end
@@ -49,6 +51,12 @@ module Traxo
         grant_type: 'refresh_token',
         refresh_token: token
       }
+    end
+
+    def check_state_parameter(state)
+      if !state.is_a?(String) || state.empty? 
+        raise ArgumentError.new('State parameter must be a (non-empty) string')
+      end
     end
   end
 
