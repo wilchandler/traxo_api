@@ -121,7 +121,7 @@ module Traxo
       request = Net::HTTP::Delete.new(uri)
       attach_token(request)
       response = make_http_request(uri) { |http| http.request(request) }
-      (response.code.to_i >= 300) ? false : true      
+      check_code(response) ? true : false
     end
 
     def query_string(data = {})
