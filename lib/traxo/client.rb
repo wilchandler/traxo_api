@@ -2,7 +2,7 @@ module Traxo
 
   class Client
     attr_accessor :access_token
-    attr_reader :response_format
+    attr_reader :response_format, :raise_http_errors
 
     API_URL = "https://api.traxo.com/v2/"
 
@@ -37,10 +37,23 @@ module Traxo
       @response_format = :http
     end
 
+    def ignore_http_errors!
+      @raise_http_errors = false
+    end
+
+    def raise_http_errors!
+      @raise_http_errors = true
+    end
+
       private
 
     def assign_options(options)
-      if format = options[:response_format]
+      assign_response_format(options[:response_format])
+      assign_error_handling(options[:error_handling])
+    end
+
+    def assign_response_format(format)
+      if format
         accepted = [:body, :body_string, :headers, :headers_string, :code, :http]
         if accepted.include? format
           @response_format = format
@@ -48,8 +61,22 @@ module Traxo
           str = accepted.join(', :').insert(0, ':')
           raise ArgumentError.new(":response_format must be one of the following: #{str}")
         end
+      else
+        return_body!
       end
-      return_body!
+    end
+
+    def assign_error_handling(action)
+      if action
+        if [:raise, :ignore].include? action
+          raise_http_errors! if action == :raise
+          ignore_http_errors! if action == :ignore
+        else
+          raise ArgumentError.new(':errors parameter must be either :raise or :ignore')
+        end
+      else
+        raise_http_errors!
+      end
     end
 
     def make_http_request(uri)
@@ -124,7 +151,8 @@ module Traxo
     end
 
     def format_response(response)
-      return false if response.code.to_i >= 300
+      return false unless check_code(response)
+
       case @response_format
       when :http
         response
@@ -141,6 +169,14 @@ module Traxo
         response.to_json
       when :code
         response.code.to_i
+      end
+    end
+
+    def check_code(response)
+      if @raise_http_errors
+        response.value || response
+      else
+        response.code <= '300'
       end
     end
   end
