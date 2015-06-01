@@ -3,8 +3,7 @@ module Traxo
   class Client
     def get_member
       url = "#{ API_URL }me"
-      json_response = get_request_with_token(url)
-      Member.new(json_response)
+      get_request_with_token(url)
     end
 
     def get_stream(args = {})
