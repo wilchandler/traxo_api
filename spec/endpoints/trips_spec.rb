@@ -248,12 +248,12 @@ describe 'Traxo::Client trips endpoints' do
           expect(result).to be_instance_of Traxo::Trip
         end
 
-        it 'returns nil if creation is unsuccessful' do
+        it 'returns false if creation is unsuccessful' do
           stub_request(:post, address).with(body: args_with_string_dates, headers: headers)
                                       .to_return(status: 400)
           result = call
 
-          expect(result).to be nil
+          expect(result).to be false
         end
 
         it 'makes a POST request to the correct addres with correct headers' do
