@@ -9,3 +9,6 @@
 /tmp/
 
 _notes.txt
+
+lib/traxo/models
+spec/models
