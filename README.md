@@ -78,8 +78,8 @@ t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
 t.get_member # => Hash of properties for user's Traxo account
 
 args = {
-  begin_datetime = '2015-06-01', 
-  end_datetime: '2015-06-08', 
+  begin_datetime: '2015-06-01', # can be String or Date or Datetime
+  end_datetime: '2015-06-08', # can be String or Date or Datetime
   destination: 'Little Rock, AR'
   headline: 'Good times in the Rock',
   personal: true
