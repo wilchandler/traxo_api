@@ -6,13 +6,8 @@ The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing
 - [Installation](#toc-installation)  
 - [Usage](#toc-usage)  
   - [Authorization](#toc-auth)  
-    - [Authorization methods](#toc-auth-methods)  
-    - [Example of ontroller flow](#toc-auth-example)  
   - [CRUD](#toc-crud)  
-    - [Client initialization](#toc-crud-init)  
-    - [Member endpoints](#toc-crud-member)  
-    - [Account endpoints](#toc-crud-account)  
-    - [Trip endpoints](#toc-crud-trip)  
+- [Documentation](#toc-docs)
 - [License](#toc-license)
 - [Contributing](#toc-contributing)
 
@@ -42,31 +37,8 @@ Traxo's API uses the OAuth 2.0 standard for authorization. Additionally, Traxo e
 
 To gain authorization from a Traxo user, you will need to [register your application](https://developer.traxo.com/signup) with Traxo.  Once registered, you will need to retrieve your your _client ID_ and _client secret_ from the API's website where you will also need to register a _redirect url_ for the application.
 
-<a name="toc-auth-methods"></a>
-####Authorization methods
-
-##### ::new(client_id, client_secret, redirect_url) => Traxo::Auth
-Initializes and returns a Traxo::Auth object. The three parameters are required to complete the the authorization process.
-
-##### \#request_code_url(state) => String
-Returns a String containing the URL for redirecting users to the Traxo API to authorize your application on their behalf.
-
-When Traxo redirects back to your application from this URL, the redirect will include a 'request code' and the 'state parameter' string that you provided.
-
-__Note__: While the Traxo API (and, in turn, this gem) requires the ['state parameter'](http://www.thread-safe.com/2014/05/the-correct-use-of-state-parameter-in.html) string to protect against CRSF attacks, it is ultimately the client's decision whether or not to check the returned state string against the state string provided to the API.
-
-##### \#exchange_request_code(code) => Hash
-Using an access code from the API, requests tokens from the Traxo API and returns the API's response as a Hash.  Response keys include 'access_token', 'expires_in', and 'refresh_token.'
-
-__Note__: As of 5/15, user authorization lasts up to one year, but each access_token only lasts 24 hours (specified with the response's 'expires_in' value). If you have a stale access_token, you should either direct your user back to reauthorize or use the __\#exchange_refresh_token__ method below with the response's 'refresh_token' value.
-
-##### \#exchange_refresh_token => Hash
-Using a refresh token, requests new tokens from the Traxo API and returns the API's response as a Hash.  Response keys include 'access_token', 'expires_in', and 'refresh_token.'
-
-
-<a name="toc-auth-example"></a>
 ####Example of authorization controller flow
-```
+```ruby
 class TraxoController < ApplicationController
 
 	def auth
@@ -77,15 +49,22 @@ class TraxoController < ApplicationController
 	
 	def auth_success
 	    t = Traxo::Auth.new('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URL')
-	    code = params[:code]
-	    response = t.exchange_request_code(code)
 	    
-	    access_token = response['access_token'] # used to authorize requests
-	    lifetime = response['expires_in'] # seconds until access_token expires
-	    refresh_token = response['refresh_token'] # used to request new tokens
+	    # this conditional is not required, but uses CSRF protection made possible 
+	    # by Traxo's enforcement of a state parameter in authorization requests
+	    if params[:state] == 'SOME_STRING'
+	      code = params[:code]
+	      response = t.exchange_request_code(code)
+	    
+	      access_token = response['access_token'] # used to authorize requests
+	      lifetime = response['expires_in'] # seconds until access_token expires
+	      refresh_token = response['refresh_token'] # used to request new tokens
+	      
+	      # store tokens (and use elsewhere for CRUD requests)...
+	    end
 	end
 	
-		# store tokens (and use elsewhere for CRUD requests)...
+	
 end
 
 ```
@@ -94,130 +73,24 @@ end
 ###CRUD
 Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
 
-<a name="toc-crud-init"></a>
-####Client Initialization
-
-##### ::new(access_token, client_id, client_secret) => Traxo::Client
-Returns a Traxo::Client object which provides the methods for interacting with the API.
-
-```
+```ruby
 t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
-t.get_member # => Traxo::Member object
+t.get_member # => Hash of properties for user's Traxo account
+
+args = {
+  begin_datetime = '2015-06-01', 
+  end_datetime: '2015-06-08', 
+  destination: 'Little Rock, AR'
+  headline: 'Good times in the Rock',
+  personal: true
+}
+t.create_trip(args) # => Hash of properties for a freshly created Trip
 ```
 
-<a name="toc-crud-member"></a>
-####Member Endpoints
-##### \#get_member => Traxo::Member
-Returns a Traxo::Member object with the authorizing user's Traxo information.
-
-##### \#get_stream(args = {}) => Array (from parsed JSON)
-Returns the 'travel stream' for the authorizing user's Traxo account.  
-
-Optional argument keys:  
-_:offset_, _:limit_
-
-<a name="toc-crud-account"></a>
-####Account Endpoints
-
-##### \#get_account(id) => Traxo::Account
-Returns a travel account with the provided ID as a Traxo::Acount object
-
-##### \#get_acounts(args = {}) => Array (of Traxo::Account objects)
-Returns an array of travel accounts (as Traxo::Account objects)
-
-Optional argument keys:  
-_:status_, _:classification_, _:offset_, _:limit_
-
-<a name="toc-crud-trip"></a>
-####Trip Endpoints
-
-##### \#get_trips(args={})
-Retrieves a collection of the user's trips matching the given parameters.  
-
-Optional argument keys:  
-- _:segments_  
-- _:start_  
-- _:end_  
-- _:since_  
-- _:until_  
-- _:status_  
-- _:privacy_  
-- _:purpose_  
-- _:count_  
-- _:offset_  
-- _:limit_  
-- _:recursive_  
-
-##### \#get_trip(id, args={})
-Retrieves the user's trip with the given id.  
-
-Optional argument keys:  
-_:segments_ (boolean, include travel segments or not)
-
-##### \#get_current_trip(args={})
-Retrieves the trip that the user is currently taking.
- 
-_Optional argument keys same as \#get_trip_
-
-##### \#get_upcoming_trips(args={})
-Retrieves upcoming trips.
-
-Optional argument keys:  
-- _:segments_  
-- _:privacy_  
-- _:purpose_  
-- _:limit_  
-- _:offset_
-
-
-##### \#get_past_trips(args={})
-Retrieves past trips.
-
-_Optional argument keys same as \#get_current_trip_
-
-##### \#get_trip_oembed(id)
-Retrieves the user's trip with the given id in the oEmbed format.
-
-##### \#create_trip(args)
-Creates a trip for the user from the given "args" Hash.
-
-Required argument keys:  
-- _:destination_ (String, i.e. 'Little Rock, AR, US')  
-- _:start_datetime_    
-- _:end_datetime_  
-
-Optional argument keys:  
-- _:personal_  
-- _:business_  
-- _:privacy_  
-- _:headline_  
-- _:first_name_  
-- _:last_name_  
-
-
-##### \#update_trip(id, args)
-Updates the user's trip that has the given id to have the properties from the given "args" Hash.
-
-_Optional argument keys include all of the required and optional keys of \#create_trip._
-
-##### \#delete_trip(id)
-Deletes the user's trip with the given ID.
-
-
-####Segment (air, car, rail, hotel, activity) Endpoints
-_Not yet implemented_
-
-####Source Endpoints
-_Not yet implemented_
-
-####Provider Endpoints
-_Not yet implemented_
-
-####Location endpoints
-_Not yet implemented_
-
-####Callback endpoints
-_Not yet implemented_
+<a name="toc-docs"></a>
+## Documentation
+[View the documentation](https://github.com/wilchandler/traxo_api/wiki)  
+Covers more in-depth usage and the public methods available within this gem.
 
 <a name="toc-license"></a>
 ##License
