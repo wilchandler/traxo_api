@@ -18,10 +18,12 @@ Currently, methods for the _member_, _accounts_, and _trips_ endpoints of Traxo'
 <a name="toc-installation"></a>
 ##Installation
 
+_Note: this gem is currently in pre-release and should have its first non-pre-release within a few days_.
+
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'traxo_api'
+gem 'traxo_api', '~> 0.1.0pre'
 ```
 
 And then execute:
@@ -30,7 +32,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install traxo_api
+    $ gem install traxo_api --pre
 
 <a name="toc-usage"></a>
 ##Usage
