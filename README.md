@@ -1,6 +1,8 @@
 #traxo_api
 
-The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
+The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).  
+
+Currently, methods for the _member_, _accounts_, and _trips_ endpoints of Traxo's API have been implemented. More sections are hopefully soon to come.
 
 ###README Contents:  
 - [Installation](#toc-installation)  
@@ -10,6 +12,8 @@ The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both au
 - [Documentation](#toc-docs)
 - [License](#toc-license)
 - [Contributing](#toc-contributing)
+- [Links](#toc-links)
+- [Contact](#toc-contact)
 
 <a name="toc-installation"></a>
 ##Installation
@@ -84,7 +88,7 @@ args = {
   headline: 'Good times in the Rock',
   personal: true
 }
-t.create_trip(args) # => Hash of properties for a freshly created Trip
+t.create_trip(args) # => Hash of properties for the user's freshly created trip
 ```
 
 <a name="toc-docs"></a>
@@ -97,10 +101,25 @@ Covers more in-depth usage and the public methods available within this gem.
 [View MIT License](LICENSE.txt)
 
 <a name="toc-contributing"></a>
-##Contributing
+## Contributing
+
+If you find a bug, please feel free to open an issue. I aim to actively maintain this project for now as I continue to work towards implementing the remaining endpoint sections.
+
+If you would like to contribute code of your own (whether to fix a bug or to add a feature), please feel free to do the following:
 
 1. Fork it ( https://github.com/wilchandler/traxo_api/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Make sure previous tests are passing (some are currently pending from my removing features). Additional tests for new code would also be appreciated.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+<a name="toc-links"></a>
+## Links
+* [Traxo's user website](https://www.traxo.com/)  
+* [Traxo's developer website](https://developer.traxo.com/)  
+
+<a name="toc-contact"></a>
+## Contact Author
+[Website](http://www.wilchandler.me) | [Email](mailto:wilchandler2@gmail.com) | [Twitter](https://twitter.com/wil_chandler) | [LinkedIn](http://www.linkedin.com/in/wilchandler) | [GitHub](https://github.com/wilchandler)
+_Note: the creator of this gem is not affiliated with Traxo._
