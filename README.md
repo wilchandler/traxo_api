@@ -1,6 +1,6 @@
 #traxo_api
 
-The 'traxo_api' gem is a Ruby wrapper meant to simplify processes of authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
+The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).
 
 ###README Contents:  
 - [Installation](#toc-installation)  
