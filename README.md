@@ -80,7 +80,7 @@ t.get_member # => Hash of properties for user's Traxo account
 args = {
   begin_datetime: '2015-06-01', # can be String or Date or Datetime
   end_datetime: '2015-06-08', # can be String or Date or Datetime
-  destination: 'Little Rock, AR'
+  destination: 'Little Rock, AR',
   headline: 'Good times in the Rock',
   personal: true
 }
