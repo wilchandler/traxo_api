@@ -4,50 +4,43 @@ module Traxo
     def get_trips(options = {})
       data = get_trips_options(options)
       url = "#{ API_URL }trips#{ query_string(data) }"
-      response = get_request_with_token(url)
-      response.map { |trip_params| Trip.new(trip_params) }
+      get_request_with_token(url)
     end
 
     def get_trip(trip_id, options = {})
       data = get_trip_options(options)
       url = "#{ API_URL }trips/#{ trip_id }#{ query_string(data) }"
-      response = get_request_with_token(url)
-      Trip.new(response)
+      get_request_with_token(url)
     end
 
     def get_current_trip(options = {})
       data = get_trip_options(options)
       url = "#{ API_URL }trips/current#{ query_string(data) }"
-      response = get_request_with_token(url)
-      Trip.new(response)
+      get_request_with_token(url)
     end
 
     def get_upcoming_trips(options = {})
       data = get_past_or_upcoming_trips_options(options)
       url = "#{ API_URL }trips/upcoming#{ query_string(data) }"
-      response = get_request_with_token(url)
-      response.map { |trip| Trip.new(trip) }
+      get_request_with_token(url)
     end
 
     def get_past_trips(options = {})
       data = get_past_or_upcoming_trips_options(options)
       url = "#{ API_URL }trips/past#{ query_string(data) }"
-      response = get_request_with_token(url)
-      response.map { |trip| Trip.new(trip) }
+      get_request_with_token(url)
     end
 
     def get_trip_oembed(trip_id)
       url = "#{ API_URL }trips/oembed/#{trip_id}"
-      response = get_request_with_token(url)
-      TripOEmbed.new(response)
+      get_request_with_token(url)
     end
 
     def create_trip(arg)
       data = create_trip_data(arg)
       create_trip_check_required_params(data)
       url = "#{ API_URL}trips"
-      response = post_request_with_token(url, data)
-      Trip.new(response) if response
+      post_request_with_token(url, data)
     end
 
     def update_trip(trip_id, args)
@@ -56,8 +49,7 @@ module Traxo
       return false if args.empty?
       data = create_trip_data_from_hash(args)
       url = "#{ API_URL }trips/#{ trip_id }"
-      response = put_request_with_token(url, data)
-      response ? Trip.new : response
+      put_request_with_token(url, data)
     end
 
     def delete_trip(trip_id)
@@ -100,10 +92,8 @@ module Traxo
     def create_trip_data(arg)
       if arg.is_a? Hash
         create_trip_data_from_hash(arg)
-      elsif arg.is_a? Trip
-        create_trip_data_from_trip(arg)
       else
-        raise ArgumentError.new('Argument must be a Traxo::Trip object or Hash')
+        raise ArgumentError.new('Argument must be a Hash')
       end
     end
 
@@ -123,8 +113,6 @@ module Traxo
     def create_trip_check_required_params(arg)
       if arg.is_a? Hash
         valid = arg[:destination] && arg[:end_datetime] && arg[:begin_datetime]
-      elsif arg.is_a? Trip
-        #
       end
       unless valid
         message = 'Argument must include destination, end_datetime, and begin_datetime'
