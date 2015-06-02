@@ -153,8 +153,8 @@ describe Traxo::Client do
 
     context '@raise_http_errors is false' do
       it 'returns false whent the status code is not 2xx' do
-        client.ignore_http_errors!
-        result = call
+        client = Traxo::Client.new('TEST_CLIENT_ID', 'TEST_CLIENT_SECRET', 'TEST_ACCESS_TOKEN', errors: :ignore)
+        result = client.get_trip(123456) 
 
         expect(result).to be false
       end
