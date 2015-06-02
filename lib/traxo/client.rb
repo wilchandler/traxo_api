@@ -49,7 +49,7 @@ module Traxo
 
     def assign_options(options)
       assign_response_format(options[:response_format])
-      assign_error_handling(options[:error_handling])
+      assign_error_handling(options[:errors])
     end
 
     def assign_response_format(format)
