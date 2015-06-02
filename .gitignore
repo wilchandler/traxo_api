@@ -12,3 +12,5 @@ _notes.txt
 
 lib/traxo/models
 spec/models
+
+*.gem
