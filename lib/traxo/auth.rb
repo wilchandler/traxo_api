@@ -19,13 +19,13 @@ module Traxo
     def exchange_request_code(code)
       data = token_request_data(code, @oauth_redirect_url)
       response = Net::HTTP.post_form(token_uri, data)
-      JSON.parse(response.body)
+      JSON.parse(response.body, symbolize_names: true)
     end
 
     def exchange_refresh_token(token)
       data = token_refresh_data(token)
       response = Net::HTTP.post_form(token_uri, data)
-      JSON.parse(response.body)
+      JSON.parse(response.body, symbolize_names: true)
     end
 
       private

@@ -62,9 +62,9 @@ class TraxoController < ApplicationController
 	      code = params[:code]
 	      response = t.exchange_request_code(code)
 	    
-	      access_token = response['access_token'] # used to authorize requests
-	      lifetime = response['expires_in'] # seconds until access_token expires
-	      refresh_token = response['refresh_token'] # used to request new tokens
+	      access_token = response[:access_token] # used to authorize requests
+	      lifetime = response[:expires_in] # seconds until access_token expires
+	      refresh_token = response[:refresh_token] # used to request new tokens
 	      
 	      # store tokens (and use elsewhere for CRUD requests)...
 	    end
