@@ -15,34 +15,42 @@ module Traxo
 
     def return_body!
       @response_format = :body
+      self
     end
 
     def return_body_string!
       @response_format = :body_string
+      self
     end
 
     def return_headers!
       @response_format = :headers
+      self
     end
 
     def return_headers_string!
       @response_format = :headers_string
+      self
     end
 
     def return_code!
       @response_format = :code
+      self
     end
 
     def return_http_object!
       @response_format = :http
+      self
     end
 
     def ignore_http_errors!
       @raise_http_errors = false
+      self
     end
 
     def raise_http_errors!
       @raise_http_errors = true
+      self
     end
 
       private
