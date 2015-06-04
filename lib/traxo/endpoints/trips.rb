@@ -66,6 +66,7 @@ module Traxo
       # since: Filter results changed since this UTC date/time (ISO8601)
       # recursive: Include changed sub-objects (requires: since or until)
       # start: listed as defaulting to "today" on Traxo API Explorer (as of 5/12/15)
+      args = args.dup
 
       unless args.empty?
         options = [:segments, :start, :end, :since, :until, :status, :privacy,
@@ -83,6 +84,7 @@ module Traxo
     end
 
     def get_past_or_upcoming_trips_options(args)
+      args = args.dup
       args[:segments] = 1 if [true, 1, '1'].include? args[:segments]
       options = [:segments, :privacy, :purpose, :limit, :offset]
       args.select! { |a| options.include? a }
@@ -98,6 +100,7 @@ module Traxo
     end
 
     def create_trip_data_from_hash(arg)
+      arg = arg.dup
       options = [:destination, :begin_datetime, :end_datetime, :personal,
                  :business, :privacy, :headline, :first_name, :last_name]
       arg.select! { |a| options.include? a }

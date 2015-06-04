@@ -1,6 +1,8 @@
 require 'traxo/version'
 
 require 'json'
+require 'time'
+require 'date'
 require 'net/http'
 require 'uri'
 

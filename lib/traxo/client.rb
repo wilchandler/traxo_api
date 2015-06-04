@@ -146,6 +146,7 @@ module Traxo
     end
 
     def convert_time(time)
+      time = time.dup
       if time.is_a? String
         begin
           time = Time.parse(time)
@@ -166,7 +167,7 @@ module Traxo
         response
       when :body
         body = response.body
-        body.empty? ? {} : JSON.parse(body, symbolize_names: true)
+        body.to_s.empty? ? {} : JSON.parse(body, symbolize_names: true)
       when :body_string
         response.body
       when :headers
