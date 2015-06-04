@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["wilchandler2@gmail.com"]
 
   spec.summary       = %q{Ruby interface for interacting with the Traxo API}
+  spec.description   = %q{The traxo_api gem provides both 'authentication' and 'client' modules to simplify the process of gaining a user's authentication and making CRUD requests to the Traxo API on their behalf.}
   spec.homepage      = "https://github.com/wilchandler/traxo_api"
   spec.license       = "MIT"
 
