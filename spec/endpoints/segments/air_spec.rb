@@ -10,7 +10,28 @@ describe 'Traxo::Client air segments endpoints' do
   let(:collection_fixture) { File.new("#{FIXTURES_DIR}/client/segments/air_segments.json") }
 
   describe '#get_air_segments' do
-    pending
+    let(:args) { { status: 'Deleted', start: Date.today, end: Date.today.next_month } }
+    let(:call) { client.get_air_segments(args) }
+    let(:stub) do
+      stub_request(:get, base_address).with(headers: headers, query: args)
+                                      .to_return(status: 200, body: collection_fixture)
+    end
+
+    it 'sends an appropriate GET request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'defaults to \'today\' as the :start argument' do
+      query = { start: 'today' }
+      def_stub = stub_request(:get, base_address).with(headers: headers, query: query)
+                                      .to_return(status: 200, body: collection_fixture)
+      client.get_air_segments
+
+      expect(def_stub).to have_been_requested
+    end
+
   end
 
   describe '#get_air_segment' do
