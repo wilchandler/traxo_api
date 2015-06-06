@@ -16,6 +16,8 @@ module Traxo
     end
 
     def delete_air_segment(id)
+      url = "#{ API_URL}segments/air/#{id}"
+      delete_request_with_token(url)
     end
   end
 
