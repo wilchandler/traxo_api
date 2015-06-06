@@ -1,5 +1,7 @@
 #traxo_api
 
+[![Gem Version](https://badge.fury.io/rb/traxo_api.svg)](http://badge.fury.io/rb/traxo_api)
+
 The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).  
 
 Currently, methods for the _member_, _accounts_, and _trips_ endpoints of Traxo's API have been implemented. More sections are hopefully soon to come.
