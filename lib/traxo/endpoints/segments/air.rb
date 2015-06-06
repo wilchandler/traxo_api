@@ -12,7 +12,10 @@ module Traxo
       get_request_with_token(url)
     end
 
-    def create_air_segment(args = {})
+    def create_air_segment(args)
+      url = "#{ API_URL}segments/air"
+      data = create_air_segment_options(args)
+      post_request_with_token(url, data)
     end
 
     def update_air_segment(id, args = {})
@@ -37,6 +40,26 @@ module Traxo
         args[:end] = convert_time(args[:end])
       end
       args
+    end
+
+    def create_air_segment_options(args)
+      args = args.dup
+      args[:departure_datetime] = convert_time args[:departure_datetime]
+      args[:arrival_datetime] = convert_time args[:arrival_datetime]
+      create_air_segment_required_params(args)
+      options = [ :trip_id, :origin, :destination, :departure_datetime,
+                  :arrival_datetime, :airline, :flight_num, :seat_assignment,
+                  :confirmation_no, :number_of_pax, :price, :currency, :phone,
+                  :first_name, :last_name ]
+      args.keep_if { |key| options.include? key }
+    end
+
+    def create_air_segment_required_params(args)
+      required = [:trip_id, :origin, :destination, :departure_datetime,
+                  :arrival_datetime, :airline, :flight_num]
+      required.each do |arg|
+        raise ArgumentError.new("#{arg} is a required argument key") unless args[arg]
+      end
     end
   end
 
