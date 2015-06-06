@@ -19,11 +19,11 @@ describe 'Traxo::Client accounts endpoints' do
       expect(stub).to have_been_requested
     end
 
-    xit 'returns a Traxo::Account object' do
-      result = call
+    # xit 'returns a Traxo::Account object' do
+    #   result = call
 
-      expect(result).to be_instance_of Traxo::Account
-    end
+    #   expect(result).to be_instance_of Traxo::Account
+    # end
 
   end
 
@@ -39,14 +39,14 @@ describe 'Traxo::Client accounts endpoints' do
       expect(stub).to have_been_requested
     end
 
-    xit 'returns an array of Traxo::Account objects' do
-      stub
-      result = call
-      types = result.map(&:class).uniq
+    # xit 'returns an array of Traxo::Account objects' do
+    #   stub
+    #   result = call
+    #   types = result.map(&:class).uniq
 
-      expect(result).to be_instance_of Array
-      expect(types).to match_array [Traxo::Account]
-    end
+    #   expect(result).to be_instance_of Array
+    #   expect(types).to match_array [Traxo::Account]
+    # end
 
     it 'accepts options: status, classification, offset, limit' do
       args = { status: 'Active', classification: 'Hotel', offset: 2, limit: 5 }

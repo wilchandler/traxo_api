@@ -21,11 +21,11 @@ describe 'Traxo::Client member endpoints' do
       expect(stub).to have_been_requested
     end
 
-    xit 'returns a Member object' do
-      result = call
+    # xit 'returns a Member object' do
+    #   result = call
 
-      expect(result).to be_instance_of Traxo::Member
-    end
+    #   expect(result).to be_instance_of Traxo::Member
+    # end
   end
 
   describe '#get_stream' do
@@ -83,8 +83,8 @@ describe 'Traxo::Client member endpoints' do
       expect(two_param_stub).to have_been_requested
     end
 
-    xit 'accepts a count parameter (to be returned via X-Total-Count header' do
-    end
+    # xit 'accepts a count parameter (to be returned via X-Total-Count header' do
+    # end
   end
 
 end

@@ -138,7 +138,6 @@ describe Traxo::Client do
 
   describe 'handling HTTP errors' do
     let(:call) { client.get_trip(123456) }
-    # let(:fixture) { File.new("#{FIXTURES_DIR}/client/trips/trip.json") }
     let(:stub) do
       stub_request(:any, /./).to_return(status: 404, body: '{}', :headers => { 'Content-Length' => 3 })
     end
