@@ -120,19 +120,19 @@ describe Traxo::Client do
 
   describe '#ignore_http_errors!' do
     it 'updates @error_handling to equal :ignore' do
+      client.raise_http_errors! # ignores by default
+
       expect{ client.ignore_http_errors! }.to change{ client.error_handling }.to(:ignore)
+    end
+
+    it 'is the default behavior for a client object' do
+      expect{ client.ignore_http_errors! }.not_to change{ client.error_handling }
     end
   end
 
   describe '#raise_http_errors!' do
     it 'updates @error_handling to equal :raise' do
-      client.ignore_http_errors! # raises by default
-
       expect{ client.raise_http_errors! }.to change{ client.error_handling }.to(:raise)
-    end
-
-    it 'is the default behavior for a client object' do
-      expect{ client.raise_http_errors! }.not_to change{ client.error_handling }
     end
   end
 
@@ -149,7 +149,7 @@ describe Traxo::Client do
 
     before(:each) { stub }
 
-    context 'client is configured to raise http errors (default)' do
+    context 'client is configured to raise http errors ' do
       it 'raises exceptions when the status code is not 2xx' do
         client.raise_http_errors!
 
@@ -158,7 +158,7 @@ describe Traxo::Client do
       end
     end
 
-    context 'client is configured to ignore http errors (error info will still be accessible from result)' do
+    context 'client is configured to ignore http errors (default) (error info will still be accessible from result)' do
       it 'returns a truthy value when the status code is not 2xx' do
         client.ignore_http_errors!
         get_res = client.get_trip(1234)

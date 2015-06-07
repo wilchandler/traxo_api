@@ -89,7 +89,7 @@ module Traxo
           raise ArgumentError.new(':errors parameter must be either :raise or :ignore')
         end
       else
-        raise_http_errors!
+        ignore_http_errors!
       end
     end
 
@@ -180,7 +180,9 @@ module Traxo
         response.header.each { |key| headers[key.to_sym] = response[key] }
         headers
       when :headers_string
-        response.to_json
+        headers = {}
+        response.header.each { |key| headers[key.to_sym] = response[key] }
+        headers.to_json
       when :code
         response.code.to_i
       end
