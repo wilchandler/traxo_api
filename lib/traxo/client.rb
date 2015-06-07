@@ -2,7 +2,7 @@ module Traxo
 
   class Client
     attr_accessor :access_token
-    attr_reader :response_format, :raise_http_errors
+    attr_reader :response_format, :error_handling
 
     API_URL = "https://api.traxo.com/v2/"
 
@@ -44,12 +44,17 @@ module Traxo
     end
 
     def ignore_http_errors!
-      @raise_http_errors = false
+      @error_handling = :ignore
       self
     end
 
     def raise_http_errors!
-      @raise_http_errors = true
+      @error_handling = :raise
+      self
+    end
+
+    def return_false_if_http_errors!
+      @error_handling = :bool
       self
     end
 
@@ -76,9 +81,10 @@ module Traxo
 
     def assign_error_handling(action)
       if action
-        if [:raise, :ignore].include? action
+        if [:raise, :ignore, :bool].include? action
           raise_http_errors! if action == :raise
           ignore_http_errors! if action == :ignore
+          return_false_if_http_errors! if action == :bool
         else
           raise ArgumentError.new(':errors parameter must be either :raise or :ignore')
         end
@@ -129,7 +135,7 @@ module Traxo
       request = Net::HTTP::Delete.new(uri)
       attach_token(request)
       response = make_http_request(uri) { |http| http.request(request) }
-      check_code(response) ? true : false
+      format_response(response)
     end
 
     def query_string(data = {})
@@ -160,7 +166,7 @@ module Traxo
     end
 
     def format_response(response)
-      return false unless check_code(response)
+      return false unless check_success(response)
 
       case @response_format
       when :http
@@ -181,12 +187,13 @@ module Traxo
       end
     end
 
-    def check_code(response)
-      if @raise_http_errors
-        response.value || response
-      else
-        response.code <= '300'
+    def check_success(response)
+      if @error_handling == :raise
+        return response.value || response
+      elsif @error_handling == :ignore
+        return response
       end
+      response.code <= '300'
     end
   end
   

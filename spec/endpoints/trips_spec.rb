@@ -269,12 +269,12 @@ describe 'Traxo::Client trips endpoints' do
       expect(stub).to have_been_requested
     end
 
-    it 'returns true if the deletion is successful' do
-      stub
-      result = call
+    # it 'returns true if the deletion is successful' do
+    #   stub
+    #   result = call
 
-      expect(result).to be true
-    end
+    #   expect(result).to be true
+    # end
 
     # xit 'returns false if the deletion is unsuccessful' do
     #   stub_request(:delete, address).with(headers: headers)

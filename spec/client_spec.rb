@@ -119,45 +119,81 @@ describe Traxo::Client do
   end
 
   describe '#ignore_http_errors!' do
-    it 'updates @raise_http_errors to be false' do
-      expect{ client.ignore_http_errors! }.to change{ client.raise_http_errors }.to(false)
+    it 'updates @error_handling to equal :ignore' do
+      expect{ client.ignore_http_errors! }.to change{ client.error_handling }.to(:ignore)
     end
   end
 
   describe '#raise_http_errors!' do
-    it 'updates @raise_http_errors to be true' do
+    it 'updates @error_handling to equal :raise' do
       client.ignore_http_errors! # raises by default
 
-      expect{ client.raise_http_errors! }.to change{ client.raise_http_errors }.to(true)
+      expect{ client.raise_http_errors! }.to change{ client.error_handling }.to(:raise)
     end
 
     it 'is the default behavior for a client object' do
-      expect{ client.raise_http_errors! }.not_to change{ client.raise_http_errors }
+      expect{ client.raise_http_errors! }.not_to change{ client.error_handling }
+    end
+  end
+
+  describe '#return_false_if_http_errors!' do
+    it 'updates @error_handling to equal :bool' do
+      expect{ client.return_false_if_http_errors! }.to change{ client.error_handling }.to(:bool)
     end
   end
 
   describe 'handling HTTP errors' do
-    let(:call) { client.get_trip(123456) }
     let(:stub) do
       stub_request(:any, /./).to_return(status: 404, body: '{}', :headers => { 'Content-Length' => 3 })
     end
 
     before(:each) { stub }
 
-    context '@raise_http_errors is true (default)' do
-      it 'raises an error when the status code is not 2xx' do
-        expect{ call }.to raise_error
+    context 'client is configured to raise http errors (default)' do
+      it 'raises exceptions when the status code is not 2xx' do
+        client.raise_http_errors!
+
+        expect{ client.get_trip(1234) }.to raise_error
+        expect{ client.delete_trip(1234) }.to raise_error
       end
     end
 
-    context '@raise_http_errors is false' do
-      it 'returns false whent the status code is not 2xx' do
-        client = Traxo::Client.new('TEST_CLIENT_ID', 'TEST_CLIENT_SECRET', 'TEST_ACCESS_TOKEN', errors: :ignore)
-        result = client.get_trip(123456) 
+    context 'client is configured to ignore http errors (error info will still be accessible from result)' do
+      it 'returns a truthy value when the status code is not 2xx' do
+        client.ignore_http_errors!
+        get_res = client.get_trip(1234)
+        del_res = client.delete_trip(1234)
 
-        expect(result).to be false
+        expect(get_res).to be_truthy
+        expect(del_res).to be_truthy
       end
     end
+
+    context 'client is configured to return false for http errors' do
+      it 'returns false when the status code is not 2xx' do
+        client.return_false_if_http_errors!
+        get_res = client.get_trip(1234)
+        del_res = client.delete_trip(1234)
+
+        expect(get_res).to be false
+        expect(del_res).to be false
+      end
+    end
+
+    # context '@raise_http_errors is true (default)' do
+    #   it 'raises an error when the status code is not 2xx' do
+    #     expect{ call }.to raise_error
+    #   end
+    # end
+
+    # context '@raise_http_errors is false' do
+    #   it 'returns false whent the status code is not 2xx' do
+    #     client = Traxo::Client.new('TEST_CLIENT_ID', 'TEST_CLIENT_SECRET', 'TEST_ACCESS_TOKEN', errors: :ignore)
+    #     result = client.get_trip(123456) 
+
+    #     expect(result).to be false
+    #   end
+    # end
   end
 
 end
