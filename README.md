@@ -4,7 +4,7 @@
 
 The 'traxo_api' gem is a Ruby wrapper meant to simplify the processes of both authorizing applications and creating interactions with the [Traxo API](https://developer.traxo.com).  
 
-Currently, methods for the _member_, _accounts_, and _trips_ endpoints of Traxo's API have been implemented. More sections are hopefully soon to come.
+Currently, methods for the __member__, __accounts__, __trips__, and __air segments__ endpoints of Traxo's API have been implemented. More sections are hopefully soon to come.
 
 ###README Contents:  
 - [Installation](#toc-installation)  
@@ -43,6 +43,8 @@ Traxo's API uses the OAuth 2.0 standard for authorization. Additionally, Traxo e
 
 To gain authorization from a Traxo user, you will need to [register your application](https://developer.traxo.com/signup) with Traxo.  Once registered, you will need to retrieve your your _client ID_ and _client secret_ from the API's website where you will also need to register a _redirect url_ for the application.
 
+See the [__authorization documentation__](https://github.com/wilchandler/traxo_api/wiki/Authorization) for a list and detailing of available authorization methods.
+
 ####Example of authorization controller flow
 ```ruby
 class TraxoController < ApplicationController
@@ -77,8 +79,11 @@ end
 
 <a name="toc-crud"></a>
 ###CRUD
-Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.
+Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.  There are a multiple response formats available, and http errors/failures can be configured to be ignored or to raise exceptions.
 
+See the [__endpoint documentation__](https://github.com/wilchandler/traxo_api/wiki/Client-for-Endpoints) for response formatting and error handling. Individual endpoint methods are also detailed in the documentation.
+
+####Example of getting user's Traxo details and creating a trip
 ```ruby
 t = Traxo::Client.new('ACCESS_TOKEN', 'CLIENT_ID', 'CLIENT_SECRET')
 t.get_member # => Hash of properties for user's Traxo account
