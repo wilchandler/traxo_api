@@ -79,7 +79,7 @@ end
 
 <a name="toc-crud"></a>
 ###CRUD
-Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.  There are a multiple response formats available, and http errors/failures can be configured to be ignored or to raise exceptions.
+Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.  There are a multiple response formats available, and http errors/failures can be configured to be _raise exceptions_ (default), _ignored_, or to _return false_ for the CRUD method being called.
 
 See the [__endpoint documentation__](https://github.com/wilchandler/traxo_api/wiki/Client-for-Endpoints) for response formatting and error handling. Individual endpoint methods are also detailed in the documentation.
 
