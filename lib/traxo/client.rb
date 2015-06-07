@@ -152,7 +152,6 @@ module Traxo
     end
 
     def convert_time(time)
-      time = time.dup
       if time.is_a? String
         begin
           time = Time.parse(time)
