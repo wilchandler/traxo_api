@@ -18,7 +18,12 @@ module Traxo
       post_request_with_token(url, data)
     end
 
-    def update_air_segment(id, args = {})
+    def update_air_segment(id, args)
+      url = "#{ API_URL}segments/air/#{id}"
+      data = create_air_segment_options(args, false)
+      data.delete_if { |key, val| !val } # previous datetime filtering is skipped
+      raise ArgumentError.new('Must provide options to update segment') if data.empty?
+      put_request_with_token(url, data)
     end
 
     def delete_air_segment(id)
@@ -42,11 +47,11 @@ module Traxo
       args
     end
 
-    def create_air_segment_options(args)
+    def create_air_segment_options(args, enforce_required = true)
       args = args.dup
       args[:departure_datetime] = convert_time args[:departure_datetime]
       args[:arrival_datetime] = convert_time args[:arrival_datetime]
-      create_air_segment_required_params(args)
+      create_air_segment_required_params(args) if enforce_required
       options = [ :trip_id, :origin, :destination, :departure_datetime,
                   :arrival_datetime, :airline, :flight_num, :seat_assignment,
                   :confirmation_no, :number_of_pax, :price, :currency, :phone,

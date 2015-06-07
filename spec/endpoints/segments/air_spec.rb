@@ -70,7 +70,7 @@ describe 'Traxo::Client air segments endpoints' do
         last_name: 'Chandler'
       }
     end
-    let(:string_time_args) { args.merge({ departure_datetime: args[:departure_datetime].iso8601, arrival_datetime: args[:arrival_datetime].iso8601 }) }
+    let(:string_time_args) { args.merge({ departure_datetime: d_time.iso8601, arrival_datetime: a_time.iso8601 }) }
     let(:call) {  client.create_air_segment(args) }
     let(:stub) do
       stub_request(:post, base_address).with(headers: headers, body: string_time_args)
@@ -96,7 +96,45 @@ describe 'Traxo::Client air segments endpoints' do
   end
 
   describe '#update_air_segment' do
-    pending
+    let(:d_time) { Time.now }
+    let(:a_time) { d_time + 60 * 60 * 2}
+    let(:args) do
+      {
+        trip_id: 12345.to_s,
+        origin: 'ORD',
+        destination: 'LIT',
+        departure_datetime: d_time,
+        arrival_datetime: a_time,
+        airline: 'AA',
+        flight_num: 321.to_s,
+        seat_assignment: '3A',
+        confirmation_no: '123456789',
+        number_of_pax: 6.to_s,
+        price: 300.to_s,
+        currency: 'USD',
+        phone: '555-555-5555',
+        first_name: 'Wil',
+        last_name: 'Chandler'
+      }
+    end
+    let(:call) { client.update_air_segment(id, args) }
+    let(:string_time_args) { args.merge({ departure_datetime: d_time.iso8601, arrival_datetime: a_time .iso8601 }) }
+    let(:stub) do 
+      stub_request(:put, id_address).with(headers: headers, body: string_time_args)
+                                    .to_return(status: 200, body: single_fixture)
+    end
+
+    it 'sends an appropriate PUT request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises an exception if no valid keys are present in \'args\' hash' do
+      bad_args = { :foo => :bar }
+
+      expect{ client.update_air_segment(id, bad_args) }.to raise_error(ArgumentError)
+    end
   end
 
   describe '#delete_air_segment' do
