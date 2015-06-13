@@ -48,7 +48,6 @@ See the [__authorization documentation__](https://github.com/wilchandler/traxo_a
 ####Example of authorization controller flow
 ```ruby
 class TraxoController < ApplicationController
-
 	def auth
 	    t = Traxo::Auth.new('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URL')
 	    state = 'SOME_STRING'
@@ -71,15 +70,13 @@ class TraxoController < ApplicationController
 	      # store tokens (and use elsewhere for CRUD requests)...
 	    end
 	end
-	
-	
 end
 
 ```
 
 <a name="toc-crud"></a>
 ###CRUD
-Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.  There are a multiple response formats available, and http errors/failures can be configured to be _raise exceptions_ (default), _ignored_, or to _return false_ for the CRUD method being called.
+Once a user has authorized your application and you have a valid access token, you can start making CRUD (create, read, update, delete) requests to the Traxo API on their behalf.  There are a multiple response formats available (by default, a Hash of the parsed JSON body).  HTTP errors/failures can be configured to be _ignored_ (default; will still return the response as in the format configured), _raise exceptions_, or to _return false_ for the CRUD method being called.
 
 See the [__endpoint documentation__](https://github.com/wilchandler/traxo_api/wiki/Client-for-Endpoints) for response formatting and error handling. Individual endpoint methods are also detailed in the documentation.
 
