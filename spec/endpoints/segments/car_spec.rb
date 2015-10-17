@@ -47,6 +47,16 @@ describe 'Traxo::Client car segments endpoints' do
   end
 
   describe '#delete_car_segments' do
-    pending
+    let(:stub) do
+      stub_request(:delete, id_address).with(headers: headers)
+                                       .to_return(status: 200, body: '')
+    end
+    let(:call) { client.delete_car_segment(id) }
+
+    it 'sends an appropriate DELETE request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
   end
 end
