@@ -130,7 +130,7 @@ describe 'Traxo::Client air segments endpoints' do
       expect(stub).to have_been_requested
     end
 
-    it 'raises an exception if no valid keys are present in \'args\' hash' do
+    it 'raises an error if no valid keys are present in \'args\' hash' do
       bad_args = { :foo => :bar }
 
       expect{ client.update_air_segment(id, bad_args) }.to raise_error(ArgumentError)

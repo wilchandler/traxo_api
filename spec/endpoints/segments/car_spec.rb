@@ -88,7 +88,47 @@ describe 'Traxo::Client car segments endpoints' do
   end
 
   describe '#update_car_segments' do
-    pending
+    let(:p_time) { Time.now }
+    let(:d_time) { p_time + 60 * 60 * 24 }
+    let(:args) do
+      {
+        car_company: 'Avis',
+        pickup_datetime: p_time,
+        dropoff_datetime: d_time,
+        pickup_city: 'Little Rock, AR',
+        dropoff_city: 'Nashville, TN',
+        pickup_address1: '1200 President Clinton Ave',
+        pickup_address2: 'Level 1',
+        pickup_zip: '72201',
+        dropoff_address1: '2804 Opryland Dr',
+        dropoff_address2: 'Level 1',
+        dropoff_zip: 37214.to_s,
+        confirmation_no: 123456.to_s,
+        price: 300.to_s,
+        currency: 'USD',
+        phone: '(501)374-4242',
+        first_name: 'William',
+        last_name: 'Clinton'
+      }
+    end
+    let(:string_time_args) { args.merge({ pickup_datetime: p_time.iso8601, dropoff_datetime: d_time.iso8601})}
+    let(:call) { client.update_car_segment(id, args) }
+    let(:stub) do
+      stub_request(:put, id_address).with(headers: headers, body: string_time_args)
+                                    .to_return(status: 200, body: single_fixture)
+    end
+
+    it 'sends an appropriate PUT request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises an error if no valid keys are present in \'args\' hash' do
+      bad_args = { :foo => :bar }
+
+      expect{ client.update_air_segment(id, bad_args) }.to raise_error(ArgumentError)
+    end
   end
 
   describe '#delete_car_segments' do
