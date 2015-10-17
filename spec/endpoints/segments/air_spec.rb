@@ -83,7 +83,7 @@ describe 'Traxo::Client air segments endpoints' do
       expect(stub).to have_been_requested
     end
 
-    it 'raises an exception if a required argument key is not present' do
+    it 'raises an error if a required argument key is not present' do
       required = [:trip_id, :origin, :destination, :departure_datetime,
                   :arrival_datetime, :airline, :flight_num]
       required.each do |arg|

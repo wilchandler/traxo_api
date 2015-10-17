@@ -46,8 +46,25 @@ module Traxo
       args
     end
 
-    def create_car_segment_options(args)
-      #
+    def create_car_segment_options(args, enforce_required = true)
+      args = args.dup
+      args[:pickup_datetime] = convert_time args[:pickup_datetime]
+      args[:dropoff_datetime] = convert_time args[:dropoff_datetime]
+      create_car_segment_required_params(args) if enforce_required
+      options = [:trip_id, :car_company, :pickup_datetime, :dropoff_datetime,
+                 :pickup_city, :dropoff_city, :pickup_address1,
+                 :pickup_address2, :pickup_zip, :dropoff_address1,
+                 :dropoff_address2, :dropoff_zip, :confirmation_no,
+                 :price, :currency, :phone, :first_name, :last_name]
+      args.keep_if { |key| options.include? key }
+    end
+
+    def create_car_segment_required_params(args)
+      required = [:trip_id, :car_company, :pickup_datetime, :dropoff_datetime,
+                  :pickup_city, :dropoff_city]
+      required.each do |arg|
+        raise ArgumentError.new("#{arg} is a required argument key") unless args[arg]
+      end
     end
 
   end
