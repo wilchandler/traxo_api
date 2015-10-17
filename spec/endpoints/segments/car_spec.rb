@@ -6,7 +6,7 @@ describe 'Traxo::Client car segments endpoints' do
   let(:base_address) { "#{ Traxo::Client::API_URL}segments/car" }
   let(:id) { 123456 }
   let(:id_address) { "#{base_address}/#{id}" }
-  # let(:single_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segment.json") }
+  let(:single_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segment.json") }
   let(:collection_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segments.json") }
 
   describe '#get_car_segments' do
@@ -25,7 +25,17 @@ describe 'Traxo::Client car segments endpoints' do
   end
 
   describe '#get_car_segment' do
-    pending
+    let(:stub) do
+      stub_request(:get, id_address).with(headers: headers)
+                                    .to_return(status: 200, body: single_fixture)
+    end
+    let(:call) { client.get_car_segment(id) }
+
+    it 'sends an appropriate GET request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#create_car_segments' do
