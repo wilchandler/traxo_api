@@ -33,7 +33,17 @@ module Traxo
       private
 
     def get_car_segments_options(args)
-      # 
+      unless args.empty?
+        args = args.dup
+        options = [:status, :start, :end]
+        args.select! { |key| options.include? key }
+      end
+      args = { start: 'today' }.merge(args)
+      args[:start] = convert_time(args[:start]) unless args[:start] == 'today'
+      if args[:end] && args[:end] != 'today'
+        args[:end]= convert_time(args[:end])
+      end
+      args
     end
 
     def create_car_segment_options(args)

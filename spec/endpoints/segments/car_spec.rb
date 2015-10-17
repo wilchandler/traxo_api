@@ -7,10 +7,21 @@ describe 'Traxo::Client car segments endpoints' do
   let(:id) { 123456 }
   let(:id_address) { "#{base_address}/#{id}" }
   # let(:single_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segment.json") }
-  # let(:collection_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segments.json") }
+  let(:collection_fixture) { File.new("#{FIXTURES_DIR}/client/segments/car_segments.json") }
 
   describe '#get_car_segments' do
-    pending
+    let(:args) { { status: 'Deleted', start: Date.today, end: Date.today.next_month } }
+    let(:call) { client.get_car_segments(args) }
+    let(:stub) do 
+      stub_request(:get, base_address).with(headers: headers, query: args)
+                                      .to_return(status: 200, body: collection_fixture)
+      end
+
+    it 'sends an appropriate GET request' do
+      stub && call
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#get_car_segment' do
